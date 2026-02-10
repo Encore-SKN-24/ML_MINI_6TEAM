@@ -122,7 +122,7 @@ for i in range(len(proba_df)):
 
 return y_pred
 ```
-위를 활용하여 F1_score 평가함.</br>
+위를 활용하여 F1_score 평가함</br>
 상위 3개의 클래스를 후보로 선택 했을 떄 42% 정확도를 보임
 ```
 Top-1 | Micro F1: 0.321 | Macro F1: 0.097 | weighted f1 0.256
