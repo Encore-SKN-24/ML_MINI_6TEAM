@@ -14,6 +14,7 @@
 
 ---
 ## 1. 프로젝트 개요
+프로젝트 이름: **OST 오디오 특성 기반 영화 장르 예측 및 싱크 라이선싱 적합도 분석**
 
 ### 1-1. 프로젝트 소개
 **"음악만 들어도 영화의 장르가 보일까?"**
@@ -23,7 +24,6 @@
 본 프로젝트는 단순한 장르 예측을 넘어, 음악 감독의 개인적 감각에 의존해 온 싱크 라이선싱(Sync Licensing) 프로세스의 비효율을 완화하고, 기존 발매곡(카탈로그 음악)의 잠재 가치를 재발견하는 것을 목표로 합니다.
 - 장르 예측 모델 개발: 오디오 특성(Audio Features)만으로 해당 곡이 어떤 영화 장르(Action, Drama, Horror 등)에 속하는지 확률적으로 예측하는 머신러닝 모델 구축합니다.
 - 장르 적합도 점수 도출: 예측된 확률값을 **장르 적합도 점수**로 활용하여 마케팅 타겟 설정 및 싱크 라이선싱 의사결정을 지원하는 보조 지표로 제안합니다.
-
 ---
 ## 2. 기술 스택
 
@@ -74,13 +74,13 @@
 ### 사운드트랙 리스트
 <img width="356" height="280" alt="image" src="https://github.com/user-attachments/assets/a1632610-85aa-460a-b5b4-4f9342fafc7f" />  
 <img width="555" height="162" alt="image" src="https://github.com/user-attachments/assets/d516c2d2-2aab-4ad9-8406-1ebe42a6674a" />
-  
-- 중복값 확인
-<img width="616" height="438" alt="image" src="https://github.com/user-attachments/assets/49a05d87-271a-4507-820a-81ba32219fb8" />
 
 
 #### 오디오 특성 데이터
 <img width="300" height="400" alt="image" src="https://github.com/user-attachments/assets/479e9ab4-1853-449a-a8fb-682eb254c5d2" />
+
+- 중복값 확인
+<img width="616" height="438" alt="image" src="https://github.com/user-attachments/assets/49a05d87-271a-4507-820a-81ba32219fb8" />
 
 
 ### 4-2. 통합 데이터
@@ -98,21 +98,59 @@
 - 영화 장르에 따라 패턴의 차이는 있지만, 그 정도가 크지 않은 형태를 보임.
 
 ## 6. 모델 설계 및 학습
-
+본 프로젝트에서는 음악적 특성(danceability, energy, loudness, acousticness, valence, tempo)을 기반으로 학습하였으며</br>
+주요 모델로 **랜덤 포레스트(Random Forest)** 를 선택함
+```python
+rf_clf = RandomForestClassifier(
+    max_depth=20,           
+    n_estimators=500,      
+    max_features='sqrt', 
+    random_state=42,
+    class_weight='balanced' # 소수 클래스에 가중치 부여
+)
+```
 ## 7. 모델 평가
+클래스별 확률 출력에서 상위 N개 클래스를 선택하여 다중 클래스 예측 수행
+```python
+# 2차원 빈 배열 생성 (0으로 초기화)
+y_pred = np.zeros_like(proba_df.values)
+
+for i in range(len(proba_df)):
+    # 확률을 오름차순 정렬한 후 상위 N개 클래스의 인덱스 선택
+    top_n_idx = np.argsort(proba_df.iloc[i].values)[-N:]
+    y_pred[i, top_n_idx] = 1
+
+return y_pred
+```
+위를 활용하여 F1_score 평가함.</br>
+상위 3개의 클래스를 후보로 선택 했을 떄 42% 정확도를 보임
+```
+Top-1 | Micro F1: 0.321 | Macro F1: 0.097 | weighted f1 0.256
+Top-2 | Micro F1: 0.413 | Macro F1: 0.159 | weighted f1 0.344
+Top-3 | Micro F1: 0.422 | Macro F1: 0.191 | weighted f1 0.387
+Top-5 | Micro F1: 0.401 | Macro F1: 0.213 | weighted f1 0.412
+```
+- Micro F1: 전체 샘플 기준 정확도 (샘플 수가 많은 클래스 영향)
+- Macro F1: 각 클래스 평균 F1 (소수 클래스 성능 반영)
+- Weighted F1: 클래스별 샘플 수를 고려한 전체 성능
 
 ## 8. 실험 결과 및 분석
+### 샘플 10009번 노래 제목: Sidetrack
+<img width="907" height="547" alt="image" src="https://github.com/user-attachments/assets/22b378e9-62a0-42b7-b7dd-b3809968a881" /> </br>
+### 샘플 209555번 노래 제목: Only 1
+<img width="907" height="547" alt="image" src="https://github.com/user-attachments/assets/5aa82921-e80b-43d8-a3c0-0e6a08fee080" /> </br>
+### 샘플 1355번 노래 제목: XNXX
+<img width="907" height="547" alt="image" src="https://github.com/user-attachments/assets/baf69ae0-3e2d-4b85-8b24-70a165d296ee" /> </br>
+### MUSIC, ACTION 장르에 편향되는 경향이 있으나 전체적인 장르 특성을 반영하는 예측이 가능했습니다. 
 
-## 9. 활용 시나리오
-
-## 10. 한계점 및 개선 방향
-### 10-1. 장르 라벨의 본질적 모호성
+## 9. 한계점 및 개선 방향
+### 9-1. 장르 라벨의 본질적 모호성
 - Drama, Comedy, Romance와 같이 감정 스펙트럼이 넓고 장르 간 경계가 모호한 경우, 오디오 특성만으로 명확한 분리가 어려운 모습을 보였습니다.
-### 10-2. 장르 불균형 문제
+### 9-2. 장르 불균형 문제
 - Drama, Comedy: 데이터 수가 매우 많음
 - War, Western, TV Movie: 상대적으로 데이터 수가 부족함
 이로 인해 일부 장르의 ROC-AUC는 일정 수준을 달성하였으나, 실제 예측 성능을 반영하는 F1-score가 낮게 측정되는 현상이 발생하였습니다.
-### 10-3. 개선 방향
+### 9-3. 개선 방향
 향후 다음과 같은 데이터가 결합될 경우, 예측 성능 및 해석력이 크게 향상될 것이라 기대됩니다.
 - OST 사용 장면 정보 (트레일러 / 엔딩 / 하이라이트)
 - 가사(Lyrics) 기반 감성 분석
@@ -128,3 +166,4 @@
 - `진세형`</br>
   
 - `최현진`</br>
+
