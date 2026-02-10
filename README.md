@@ -125,14 +125,13 @@ return y_pred
 위를 활용하여 F1_score 평가함</br>
 상위 3개의 클래스를 후보로 선택 했을 떄 42% 정확도를 보임
 ```
-Top-1 | Micro F1: 0.321 | Macro F1: 0.097 | weighted f1 0.256
-Top-2 | Micro F1: 0.413 | Macro F1: 0.159 | weighted f1 0.344
-Top-3 | Micro F1: 0.422 | Macro F1: 0.191 | weighted f1 0.387
-Top-5 | Micro F1: 0.401 | Macro F1: 0.213 | weighted f1 0.412
+Top-1 | Micro F1: 0.321 | Macro F1: 0.097
+Top-2 | Micro F1: 0.413 | Macro F1: 0.159 
+Top-3 | Micro F1: 0.422 | Macro F1: 0.191 
+Top-5 | Micro F1: 0.401 | Macro F1: 0.213 
 ```
 - Micro F1: 전체 샘플 기준 정확도 (샘플 수가 많은 클래스 영향)
 - Macro F1: 각 클래스 평균 F1 (소수 클래스 성능 반영)
-- Weighted F1: 클래스별 샘플 수를 고려한 전체 성능
 
 ## 8. 실험 결과 및 분석
 ### 샘플 10009번 노래 제목: Sidetrack
@@ -141,7 +140,7 @@ Top-5 | Micro F1: 0.401 | Macro F1: 0.213 | weighted f1 0.412
 <img width="907" height="547" alt="image" src="https://github.com/user-attachments/assets/5aa82921-e80b-43d8-a3c0-0e6a08fee080" /> </br>
 ### 샘플 1355번 노래 제목: XNXX
 <img width="907" height="547" alt="image" src="https://github.com/user-attachments/assets/baf69ae0-3e2d-4b85-8b24-70a165d296ee" /> </br>
-### MUSIC, ACTION 장르에 편향되는 경향이 있으나 전체적인 장르 특성을 반영하는 예측이 가능했습니다. 
+### MUSIC, ACTION 장르에 편향되는 경향이 있으나 전체적인 장르 특성을 반영하는 예측나왔습니다. 
 
 ## 9. 한계점 및 개선 방향
 ### 9-1. 장르 라벨의 본질적 모호성
