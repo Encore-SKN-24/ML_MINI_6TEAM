@@ -1,1 +1,128 @@
-asdjfhsklafl
+# SKN24_EDA_MINI_6TEAM
+---
+## 🍦 TEAM I-스크림
+
+**TEAM I-스크림**은  
+모든 팀원이 MBTI `I`로 구성된 팀으로,  
+조용하지만 집요하게 데이터를 파고드는 성향을 가지고 있습니다.
+
+<!-- prettier-ignore-start -->
+|김현수|류지우|조아름|진세형|최현진|
+| :--: | :--: | :--: | :--: | :--: |
+| [![github - BarryKim34](https://img.shields.io/badge/BarryKim34-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/BarryKim34) | [![github - jia11234](https://img.shields.io/badge/jia11234-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/jia11234) | [![github - areum117](https://img.shields.io/badge/areum117-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/areum117) | [![github - gugu_eightyone](https://img.shields.io/badge/gugu_eightyone-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/gugu-eightyone) | [![github - lifeisgoodlg](https://img.shields.io/badge/lifeisgoodlg-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/lifeisgoodlg) |
+<!-- prettier-ignore-end -->
+
+---
+## 1. 프로젝트 개요
+프로젝트 이름: **OST 오디오 특성 기반 영화 장르 예측 및 싱크 라이선싱 적합도 분석**
+
+### 1-1. 프로젝트 소개
+**"음악만 들어도 영화의 장르가 보일까?"**
+이 프로젝트는 영화 OST의 오디오 데이터(Audio Features)를 분석하여 해당 곡이 어떤 장르의 영상에 적합한지 예측하는 머신러닝 모델을 구축하는 것을 목표로 합니다.
+
+### 1-2. 프로젝트 목표
+본 프로젝트는 단순한 장르 예측을 넘어, 음악 감독의 개인적 감각에 의존해 온 싱크 라이선싱(Sync Licensing) 프로세스의 비효율을 완화하고, 기존 발매곡(카탈로그 음악)의 잠재 가치를 재발견하는 것을 목표로 합니다.
+- 장르 예측 모델 개발: 오디오 특성(Audio Features)만으로 해당 곡이 어떤 영화 장르(Action, Drama, Horror 등)에 속하는지 확률적으로 예측하는 머신러닝 모델 구축합니다.
+- 장르 적합도 점수 도출: 예측된 확률값을 **장르 적합도 점수**로 활용하여 마케팅 타겟 설정 및 싱크 라이선싱 의사결정을 지원하는 보조 지표로 제안합니다.
+---
+## 2. 기술 스택
+
+## 🛠 Tech Stack
+| Category | Stack |
+|----------|-------|
+| **Language** | ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white) |
+| **Crawling** | ![BeautifulSoup](https://img.shields.io/badge/BeautifulSoup-4B8BBE?style=for-the-badge&logo=python&logoColor=white) |
+| **Data Processing** | ![Pandas](https://img.shields.io/badge/Pandas-150458?style=for-the-badge&logo=pandas&logoColor=white) ![NumPy](https://img.shields.io/badge/NumPy-013243?style=for-the-badge&logo=numpy&logoColor=white) |
+| **Machine Learning** | ![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?style=for-the-badge&logo=scikitlearn&logoColor=white) ![XGBoost](https://img.shields.io/badge/XGBoost-EB5E28?style=for-the-badge) ![Optuna](https://img.shields.io/badge/Optuna-5A5A5A?style=for-the-badge) |
+| **Visualization** | ![Matplotlib](https://img.shields.io/badge/Matplotlib-11557C?style=for-the-badge&logo=python&logoColor=white) ![Seaborn](https://img.shields.io/badge/Seaborn-4C72B0?style=for-the-badge&logo=python&logoColor=white) |
+---
+
+## 3. 데이터 수집
+
+### 3-1. 오디오 특성 데이터 (Audio Features)
+- Spotify 1 Million Tracks Dataset (Kaggle)
+- 출처: https://www.kaggle.com/datasets/amitanshjoshi/spotify-1million-tracks
+- 설명:
+    - Spotify에서 제공하는 Audio Features 기반 데이터
+    - danceability, energy, valence, tempo 등 곡의 음향적 특성을 수치화한 변수 포함
+- 목적: 영화 OST의 음악적 무드를 정량적으로 표현하는 입력 데이터로 활용
+
+### 3-2. 영화 메타데이터 (Movie Metadata)
+- The Movies Dataset (Kaggle)
+- 출처: https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset?select=movies_metadata.csv
+- 설명: 영화 제목, 장르 등 기본 메타정보 포함
+- 목적: 영화 장르 정의
+
+### 3-3. 영화 OST 데이터 (Soundtrack Collection)
+- IMDb (Web Crawling)
+- 출처: IMDb ID(imdb_id)를 기준으로 영화별 OST 정보 크롤링
+- 설명: 영화 리스트 데이터의 IMDb ID를 활용하여 각 영화의 공식 사운드트랙 정보 수집
+- 목적: 영화와 Spotify 트랙을 연결하는 매핑 테이블 생성
+
+## 4. 데이터 전처리 및 통합
+
+### 4-1. 원본 데이터 구조 및 전처리 과정
+#### 영화 메타데이터
+- 원본 데이터
+<img width="300" height="400" alt="image" src="https://github.com/user-attachments/assets/559223ed-e955-43f2-8c4d-b4ae7d9023d9" />
+
+- 불필요 컬럼 제거
+<img width="405" height="311" alt="image" src="https://github.com/user-attachments/assets/e3ba0f2d-022e-417d-adff-9889a431fb6c" />
+<img width="1338" height="195" alt="image" src="https://github.com/user-attachments/assets/3b0900fe-743b-4566-93a4-5320dc2713b8" />
+
+
+### 사운드트랙 리스트
+<img width="356" height="280" alt="image" src="https://github.com/user-attachments/assets/a1632610-85aa-460a-b5b4-4f9342fafc7f" />  
+<img width="555" height="162" alt="image" src="https://github.com/user-attachments/assets/d516c2d2-2aab-4ad9-8406-1ebe42a6674a" />
+
+
+#### 오디오 특성 데이터
+<img width="300" height="400" alt="image" src="https://github.com/user-attachments/assets/479e9ab4-1853-449a-a8fb-682eb254c5d2" />
+
+- 중복값 확인
+<img width="616" height="438" alt="image" src="https://github.com/user-attachments/assets/49a05d87-271a-4507-820a-81ba32219fb8" />
+
+
+### 4-2. 통합 데이터
+<img width="359" height="495" alt="image" src="https://github.com/user-attachments/assets/c8c03166-185f-421c-8806-de6dfc098158" />
+<img width="377" height="383" alt="image" src="https://github.com/user-attachments/assets/2e618a31-25a3-460c-a302-1f4632a21145" />
+
+
+## 5. 데이터 분석
+### 주요 장르별 오디오 특성 패턴 비교 (Line Plot)
+<img width="1390" height="690" alt="image" src="https://github.com/user-attachments/assets/1b695b75-6979-43e4-9f9e-dc769c403be9" />
+위 그래프는 데이터 수가 많은 상위 6개 장르(Action, Romance, Horror, Drama, Comedy, Sciencce Fiction)를 대상으로 패턴을 선 그래프로 비교한 결과입니다.
+
+- energy: Action / Horror / S.F. / Comedy vs. Romance / Drama
+- acousticness: Romancce / Drama에서 상대적으로 높게 나타남 -> 감정 전달 중심의 음악적 특성이 나타남
+- 영화 장르에 따라 패턴의 차이는 있지만, 그 정도가 크지 않은 형태를 보임.
+
+## 6. 모델 설계 및 학습
+
+## 7. 모델 평가
+
+## 8. 실험 결과 및 분석
+
+## 9. 한계점 및 개선 방향
+### 9-1. 장르 라벨의 본질적 모호성
+- Drama, Comedy, Romance와 같이 감정 스펙트럼이 넓고 장르 간 경계가 모호한 경우, 오디오 특성만으로 명확한 분리가 어려운 모습을 보였습니다.
+### 9-2. 장르 불균형 문제
+- Drama, Comedy: 데이터 수가 매우 많음
+- War, Western, TV Movie: 상대적으로 데이터 수가 부족함
+이로 인해 일부 장르의 ROC-AUC는 일정 수준을 달성하였으나, 실제 예측 성능을 반영하는 F1-score가 낮게 측정되는 현상이 발생하였습니다.
+### 9-3. 개선 방향
+향후 다음과 같은 데이터가 결합될 경우, 예측 성능 및 해석력이 크게 향상될 것이라 기대됩니다.
+- OST 사용 장면 정보 (트레일러 / 엔딩 / 하이라이트)
+- 가사(Lyrics) 기반 감성 분석
+- 텍스트 메타데이터(영화 시놉시스, 키워드)
+---
+## 회고록
+- `김현수`</br>
+
+- `류지우` </br>
+
+- `조아름`</br>
+ 
+- `진세형`</br>
+  
+- `최현진`</br>
