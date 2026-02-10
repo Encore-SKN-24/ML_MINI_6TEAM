@@ -134,13 +134,13 @@ Top-5 | Micro F1: 0.401 | Macro F1: 0.213
 - Macro F1: 각 클래스 평균 F1 (소수 클래스 성능 반영)
 
 ## 8. 실험 결과 및 분석
+### MUSIC, ACTION 장르에 편향되는 경향있다.
 ### 샘플 10009번 노래 제목: Sidetrack
 <img width="907" height="547" alt="image" src="https://github.com/user-attachments/assets/22b378e9-62a0-42b7-b7dd-b3809968a881" /> </br>
 ### 샘플 209555번 노래 제목: Only 1
 <img width="907" height="547" alt="image" src="https://github.com/user-attachments/assets/5aa82921-e80b-43d8-a3c0-0e6a08fee080" /> </br>
 ### 샘플 1355번 노래 제목: XNXX
-<img width="907" height="547" alt="image" src="https://github.com/user-attachments/assets/baf69ae0-3e2d-4b85-8b24-70a165d296ee" /> </br>
-### MUSIC, ACTION 장르에 편향되는 경향이 있으나 전체적인 장르 특성을 반영하는 예측나왔습니다. 
+<img width="907" height="547" alt="image" src="https://github.com/user-attachments/assets/baf69ae0-3e2d-4b85-8b24-70a165d296ee" /> </br> 
 
 ## 9. 한계점 및 개선 방향
 ### 9-1. 장르 라벨의 본질적 모호성
